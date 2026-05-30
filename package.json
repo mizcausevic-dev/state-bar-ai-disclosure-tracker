@@ -1,0 +1,15 @@
+{
+  "name": "state-bar-ai-disclosure-tracker",
+  "version": "0.1.0",
+  "description": "LegalTech jurisdiction-spanning lifecycle tracker for ABA formal opinions, state bar formal/ethics opinions, state supreme court orders, and federal court standing orders that govern licensed-attorney AI use. Covers ATTORNEYS' OWN AI USE ETHICS — distinct from other Suite verticals that cover government / HealthTech / FinTech regulators telling the private sector what to do.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify": "node src/verify.mjs",
+    "test": "npm run verify"
+  },
+  "dependencies": {
+    "ajv": "^8.17.0",
+    "ajv-formats": "^3.0.1"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mizcausevic-dev/state-bar-ai-disclosure-tracker/blob/main/schema/disclosure-event.schema.json",
+  "title": "State Bar + ABA + Court AI Disclosure Lifecycle Event",
+  "description": "A timestamped lifecycle event in a US state bar formal opinion, ABA model rule / formal opinion, state supreme court order, or federal court standing order that governs how licensed attorneys + their non-attorney assistants (including AI tools) disclose and supervise AI use. DISTINCT from the GovTech / HealthTech / FinTech / EdTech / etc. state trackers — those cover regulators TELLING THE PRIVATE SECTOR / GOVERNMENT what to do; this one covers LICENSED ATTORNEYS' OWN AI USE ETHICS rules.",
+  "type": "object",
+  "required": ["event_id", "bar_jurisdiction", "timestamp", "lifecycle_state", "citation"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "bar_jurisdiction": {
+      "type": "string",
+      "pattern": "^(ABA|US-[A-Z]{2}-(BAR|SCT|COSAC|STD-ORD)|US-[A-Z]{2}-[A-Z]+|SDNY|EDNY|NDCAL|TX-NDX|US-FED-CT-[A-Z]+)$",
+      "description": "ABA = American Bar Association. US-XX-BAR = state bar (CA, NY, etc.). US-XX-SCT = state supreme court. US-XX-COSAC = NY State Bar Committee on Standards of Attorney Conduct. SDNY/EDNY/NDCAL/etc. = federal district court standing orders. US-FED-CT-XXX = federal court (specific)."
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "lifecycle_state": {
+      "type": "string",
+      "enum": [
+        "draft-opinion-circulated",
+        "in-public-comment",
+        "formal-opinion-final",
+        "rule-amendment-proposed",
+        "rule-amendment-effective",
+        "mandatory-cle-required",
+        "mandatory-disclosure-required",
+        "mandatory-disclosure-effective",
+        "enforcement-active",
+        "enforcement-action-published",
+        "advisory-non-binding",
+        "court-standing-order-issued",
+        "court-standing-order-rescinded",
+        "rescinded",
+        "superseded",
+        "under-review"
+      ]
+    },
+    "regulatory_vehicle": {
+      "type": "string",
+      "enum": [
+        "aba-formal-opinion",
+        "aba-model-rule-amendment",
+        "state-bar-formal-opinion",
+        "state-bar-ethics-committee-opinion",
+        "state-bar-rule-amendment",
+        "state-bar-cle-requirement-update",
+        "state-supreme-court-rule-change",
+        "state-supreme-court-order",
+        "federal-district-court-standing-order",
+        "federal-bankruptcy-court-standing-order",
+        "federal-court-of-appeals-order"
+      ]
+    },
+    "citation": {
+      "type": "object",
+      "required": ["short_label", "jurisdictional_uri"],
+      "additionalProperties": false,
+      "properties": {
+        "short_label":          {"type": "string", "description": "e.g. 'ABA Formal Op 512' or 'CA Bar Practical Guidance Nov 2023'"},
+        "long_title":           {"type": "string"},
+        "jurisdictional_uri":   {"type": "string", "format": "uri"},
+        "opinion_number":       {"type": "string", "description": "e.g. '512', '24-1', 'COSAC-2024-AI'"},
+        "session_year":         {"type": "integer", "minimum": 1900, "maximum": 2100}
+      }
+    },
+    "effective_date": {"type": "string", "format": "date"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "covered_practice_areas": {
+          "type": "array",
+          "items": {"type": "string", "enum": [
+            "all-practice-areas",
+            "litigation-civil",
+            "litigation-criminal-defense",
+            "litigation-criminal-prosecution",
+            "transactional-corporate",
+            "transactional-real-estate",
+            "transactional-estate-planning",
+            "family-law",
+            "immigration",
+            "intellectual-property-patent",
+            "intellectual-property-trademark-copyright",
+            "tax-controversy",
+            "regulatory-administrative",
+            "appellate",
+            "in-house-counsel",
+            "government-prosecution"
+          ]}
+        },
+        "covered_actors": {
+          "type": "array",
+          "items": {"type": "string", "enum": [
+            "licensed-attorney",
+            "registered-foreign-legal-consultant",
+            "non-attorney-supervised-by-attorney",
+            "paralegal-or-legal-assistant",
+            "law-student-supervised-practice",
+            "court-officer-using-ai",
+            "judge-using-ai",
+            "pro-se-litigant-disclosure-required",
+            "ai-vendor-marketed-to-attorneys"
+          ]}
+        }
+      }
+    },
+    "obligation_kinds": {
+      "type": "array",
+      "items": {"type": "string", "enum": [
+        "ai-tool-disclosure-in-engagement-letter-required",
+        "client-informed-consent-for-ai-use-required",
+        "client-billing-disclosure-for-ai-time-required",
+        "cle-credit-on-ai-required",
+        "competence-with-ai-self-attestation-required",
+        "confidentiality-safeguards-for-ai-required",
+        "vendor-due-diligence-on-ai-tool-required",
+        "citation-verification-required",
+        "ai-generated-content-disclosure-to-tribunal-required",
+        "work-product-attribution-required",
+        "supervision-of-ai-by-licensed-attorney-required",
+        "unauthorized-practice-of-law-screen-required",
+        "misleading-marketing-prohibited",
+        "escalation-pathway-for-ai-incidents-required",
+        "no-billing-for-non-billable-ai-task-rule",
+        "no-fee-multiplier-for-ai-augmented-work",
+        "incident-reporting-to-bar-association-required",
+        "cross-border-data-residency-disclosure-required"
+      ]}
+    },
+    "issuing_authority": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name":     {"type": "string"},
+        "long_name":{"type": "string"},
+        "url":      {"type": "string", "format": "uri"}
+      }
+    },
+    "supersedes_event_id": {"type": "string"},
+    "amends_event_id":     {"type": "string"},
+    "notes":               {"type": "string"},
+    "tags":                {"type": "array", "items": {"type": "string"}}
+  }
+}
